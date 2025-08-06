@@ -1,3 +1,30 @@
-h1{
-    color: mediumseagreen;
+#myMapContainer{
+    display: flex; /* Makes the parent a flex container */
+    /* To center the children horizontally */
+    justify-content: center;
+    /* To center the children vertically */
+    align-items: center;
+    margin: 20px;
+}
+#myMap{
+    border: 1px solid black;
+    border-radius: 5px;
+    width: 80%;
+    height: 50vh;
+    box-shadow: 8px 10px 8px 0px rgba(148,122,122,0.75);
+}
+
+/* Style for links */
+a:link,
+a:active {
+  color: deepskyblue;
+  text-decoration: none;
+}
+a:visited {
+  color: deepskyblue;
+  text-decoration: none; 
+}
+a:hover {
+  color: crimson;
+  text-decoration: underline; 
 }
