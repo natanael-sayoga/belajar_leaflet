@@ -4,27 +4,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Belajar Leaflet</title>
-    <link rel="stylesheet" href="main.css">
 
-    <!-- leaflet's style sheet: -->
+    <!-- leaflet's stylesheet and script: -->
     <link 
         rel="stylesheet" 
         href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" 
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" 
         crossorigin=""
     />
+    <!-- 
+        defer: ensuring that the script is loaded in parallel with DOMS parsing but only
+               executed after all the DOMS elements are fully rendered 
+        async: the script is also loaded in parallel, but instead of waiting for the elements
+               to be fully rendered, this script will be executed immediately, suitable for
+               standalone script
+        both are faster to be executed compared to just putting 
+        the <script> at the end of <body> 
+    -->
+    <script 
+        src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin=""
+        defer>
+    </script>
+
+    <!-- my stylesheet and script: -->
+    <link rel="stylesheet" href="main.css">
+    <script
+        src="index.js"
+        defer>
+    </script>
 </head>
 <body>
-    <span style="font-weight: bold;">Leaflet official docs: </span> <a href="https://leafletjs.com/" target="_blank">here</a>
+    <ul>
+        References:
+        <li>
+            <span style="font-weight: bold;">Leaflet official docs: </span> <a href="https://leafletjs.com/" target="_blank">here</a>
+        </li>
+        <li>
+            <span style="font-weight: bold;">Google's tile layer: </span> <a href="https://gis.stackexchange.com/questions/225098/using-google-maps-static-tiles-with-leaflet" target="_blank">here</a>
+        </li>
+        <li>
+            <span style="font-weight: bold;">leaflet provider's tile layer: </span> <a href="https://leaflet-extras.github.io/leaflet-providers/preview/" target="_blank">here</a>
+        </li>
+    </ul>
     <div id="myMapContainer">
-        <div id="myMap" style="height: 180px;"></div> <!-- HEIGHT MUST BE INITIALIZED! -->
+        <div id="myMap" style="height: 50vh;"></div> <!-- HEIGHT MUST BE INITIALIZED! -->
     </div>
 </body>
 </html>
-
-<!-- leaflet's script: -->
-<script 
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-    crossorigin="">
-</script>
