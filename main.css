@@ -1,16 +1,23 @@
 #myMapContainer{
-    display: flex; /* Makes the parent a flex container */
-    /* To center the children horizontally */
-    justify-content: center;
-    /* To center the children vertically */
-    align-items: center;
-    margin: 20px;
+  display: flex; /* Makes the parent a flex container */
+  /* To center the children horizontally */
+  justify-content: center;
+  /* To center the children vertically */
+  align-items: center;
+  margin: 20px;
 }
 #myMap{
-    border: 1px solid black;
-    border-radius: 5px;
-    width: 80%;
-    box-shadow: 8px 10px 8px 0px rgba(148,122,122,0.75);
+  border: 1px solid black;
+  border-radius: 5px;
+  width: 80%;
+  box-shadow: 8px 10px 8px 0px rgba(148,122,122,0.75);
+}
+#myPositionIndicator{
+  width: fit-content;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 20px;
 }
 
 /* Style for links */
