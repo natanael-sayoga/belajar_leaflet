@@ -52,37 +52,53 @@ let myMarker = {
         tooltipMessage:"YOU ARE HERE!",
         icon:L.icon({
             iconUrl: 'img/people.png',
-            iconSize: [40, 40],
-            // iconAnchor: [22, 94],
-            // popupAnchor: [-3, -76],
-            // shadowUrl: 'my-icon-shadow.png',
-            // shadowSize: [68, 95],
-            // shadowAnchor: [22, 94]
-        })
+            iconSize: [40, 40]
+        }),
+        onDragStart:function(e){
+            document.getElementById("isDragged").innerText = "True"
+        },
+        onDragEnd:function(e){
+            document.getElementById("isDragged").innerText = "False"
+        },
+        onMoveStart:function(e){
+            document.getElementById("isMoved").innerText = "True"
+        },
+        onMoveEnd:function(e){
+            document.getElementById("isMoved").innerText = "False"
+        },
+        onMove:function(e){
+            let newLat = e.target.getLatLng().lat.toFixed(4)
+            let newLong = e.target.getLatLng().lng.toFixed(4)
+            let newTooltipContent = `
+            You are now at:<br> 
+            <b>(${newLat}°, ${newLong}°)</b>`
+
+            e.target.setTooltipContent(newTooltipContent)
+            document.getElementById("currentPos").innerText = `
+            [${newLat}° ${newLat>0?" N":" S"}, ${newLong}° ${newLong>0?" E":" W"}]`
+        }
     }
 }
 let merapiMarker = L.marker(myMarker.merapi.coordinate)
-merapiMarker.bindTooltip(myMarker.merapi.tooltipMessage).openTooltip();
-merapiMarker.bindPopup(myMarker.merapi.popupContent).openPopup()
+merapiMarker.bindTooltip(myMarker.merapi.tooltipMessage)
+merapiMarker.bindPopup(myMarker.merapi.popupContent)
 
 let ngandongMarker = L.marker(myMarker.ngandongPineForest.coordinate)
 ngandongMarker.bindTooltip(myMarker.ngandongPineForest.tooltipMessage)
 ngandongMarker.bindPopup(myMarker.ngandongPineForest.popupContent)
 
+let draggableMarkerOrigin = document.getElementById("originPos").innerText = "[-7.5816° S, 110.4474° E]"
+let draggableMarkerCurrent = document.getElementById("currentPos").innerText = "[-7.5816° S, 110.4474° E]"
 let draggableMarker = L.marker(myMarker.draggableMarker.coordinate, {
     icon:myMarker.draggableMarker.icon,
-    draggable:true,
+    draggable:true
 })
 draggableMarker.bindTooltip(myMarker.draggableMarker.tooltipMessage)
-https://leafletjs.com/reference.html#marker
-//https://leafletjs.com/reference.html#event
-draggableMarker.on("move", function(e){
-    myMarker.draggableMarker.tooltipMessage="we are moving"
-    //draggableMarker.bindTooltip(myMarker.draggableMarker.tooltipMessage)
-    // myMarker.draggableMarker.tooltipMessage=`You are now located at:<br>
-    // <b>(${draggableMarker.getLatLng().lat}°, ${draggableMarker.getLatLng().lng}°)</b>`
-})
-
+draggableMarker.on("move", myMarker.draggableMarker.onMove)
+draggableMarker.on("dragstart", myMarker.draggableMarker.onDragStart)
+draggableMarker.on("dragend", myMarker.draggableMarker.onDragEnd)
+draggableMarker.on("movestart", myMarker.draggableMarker.onMoveStart)
+draggableMarker.on("moveend", myMarker.draggableMarker.onMoveEnd)
 
 osm.addTo(myMap);
 merapiMarker.addTo(myMap)
