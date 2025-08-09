@@ -1,3 +1,5 @@
+import { myMarker } from './myMarkers.js';
+import { myTileLayers } from './myTileLayer.js';
 /*
 first we need to initiate a map object that will take LATITUDE and LONGITUDE coordinate as a starting point on our map
 this map object will also take initial ZOOM value and an id of a div that act as a container for our map!
@@ -21,86 +23,59 @@ in return we will get an image data to be shown as a map to the user!
     => define location in term of EAST (+) and WEST (-)
 */
 
+/* --- INITIATING MAP --- */
 let myMap = L.map('myMap', {
     center: [-7.5407, 110.4457],
     zoom: 12
 })
-let osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-})
 
-let myMarker = {
-    merapi:{
-        coordinate:[-7.5407, 110.4457],
-        tooltipMessage:"Mt. Merapi Peak",
-        popupContent:`
-            located at:<br>
-            <b>(-7.5407° S, 110.4457° E)</b>
-            `
-    },
-    ngandongPineForest:{
-        coordinate:[-7.5852, 110.4128],
-        tooltipMessage:"Ngandong Pine Forrest",
-        popupContent:`
-        located at:<br>
-        <b>(-7.5852° S, 110.4128° E)</b>
-        `
-    },
-    draggableMarker:{
-        coordinate:[-7.5816, 110.4474],
-        tooltipMessage:"YOU ARE HERE!",
-        icon:L.icon({
-            iconUrl: 'img/people.png',
-            iconSize: [40, 40]
-        }),
-        onDragStart:function(e){
-            document.getElementById("isDragged").innerText = "True"
-        },
-        onDragEnd:function(e){
-            document.getElementById("isDragged").innerText = "False"
-        },
-        onMoveStart:function(e){
-            document.getElementById("isMoved").innerText = "True"
-        },
-        onMoveEnd:function(e){
-            document.getElementById("isMoved").innerText = "False"
-        },
-        onMove:function(e){
-            let newLat = e.target.getLatLng().lat.toFixed(4)
-            let newLong = e.target.getLatLng().lng.toFixed(4)
-            let newTooltipContent = `
-            You are now at:<br> 
-            <b>(${newLat}°, ${newLong}°)</b>`
-
-            e.target.setTooltipContent(newTooltipContent)
-            document.getElementById("currentPos").innerText = `
-            [${newLat}° ${newLat>0?" N":" S"}, ${newLong}° ${newLong>0?" E":" W"}]`
-        }
-    }
+/* --- INITIATING TILE LAYER (MAP IMAGE) --- */
+function createTilelayer(map, controlLayer){
+    Object.entries(myTileLayers).forEach(([key, config]) => {
+        let tileLayer = L.tileLayer(config.baseURL, config.option)
+        if(config.name==="Default Map"){tileLayer.addTo(map)}
+        controlLayer.addBaseLayer(tileLayer, config.name)
+    })
 }
-let merapiMarker = L.marker(myMarker.merapi.coordinate)
-merapiMarker.bindTooltip(myMarker.merapi.tooltipMessage)
-merapiMarker.bindPopup(myMarker.merapi.popupContent)
 
-let ngandongMarker = L.marker(myMarker.ngandongPineForest.coordinate)
-ngandongMarker.bindTooltip(myMarker.ngandongPineForest.tooltipMessage)
-ngandongMarker.bindPopup(myMarker.ngandongPineForest.popupContent)
+/* --- INITIATING MAP MARKERS --- */
+function createMarkers(map, controlLayer){
+    Object.entries(myMarker).forEach(([key, config]) => {
+        let marker = null
+        if (key!=="draggableMarker"/*config.name !== 'You'*/) {
+            marker = L.marker(config.coordinate)
+                .bindTooltip(config.tooltipMessage)
+                .bindPopup(config.popupContent)
+                .addTo(map)     
+        }else{
+            // Draggable marker
+            marker = L.marker(config.coordinate, {
+                icon: config.icon,
+                draggable: true
+            }).bindTooltip(config.tooltipMessage)
+            .addTo(map);
 
-let draggableMarkerOrigin = document.getElementById("originPos").innerText = "[-7.5816° S, 110.4474° E]"
-let draggableMarkerCurrent = document.getElementById("currentPos").innerText = "[-7.5816° S, 110.4474° E]"
-let draggableMarker = L.marker(myMarker.draggableMarker.coordinate, {
-    icon:myMarker.draggableMarker.icon,
-    draggable:true
-})
-draggableMarker.bindTooltip(myMarker.draggableMarker.tooltipMessage)
-draggableMarker.on("move", myMarker.draggableMarker.onMove)
-draggableMarker.on("dragstart", myMarker.draggableMarker.onDragStart)
-draggableMarker.on("dragend", myMarker.draggableMarker.onDragEnd)
-draggableMarker.on("movestart", myMarker.draggableMarker.onMoveStart)
-draggableMarker.on("moveend", myMarker.draggableMarker.onMoveEnd)
+            // Bind events
+            marker.on('dragstart', config.onDragStart)
+                .on('dragend', config.onDragEnd)
+                .on('movestart', config.onMoveStart)
+                .on('moveend', config.onMoveEnd)
+                .on('move', config.onMove);
+        }
+        controlLayer.addOverlay(marker, config.name)
+    });
+}
 
-osm.addTo(myMap);
-merapiMarker.addTo(myMap)
-ngandongMarker.addTo(myMap)
-draggableMarker.addTo(myMap)
+/* --- ADDING ELEMENTS TO MAP AS THE DEFAULT OPTION --- */
+function map_start(){
+    /* --- ADDING CONTROL LAYER --- */
+    let myControlLayer = L.control.layers({}, {}) //L.control.layers(tile_options, marker_options)
+    createMarkers(myMap, myControlLayer)
+    createTilelayer(myMap, myControlLayer)
+    myControlLayer.addTo(myMap)
+
+    /* --- INITIATING LEGENDS OR OTHER INFO */
+    document.getElementById("originPos").innerText = "[-7.5816° S, 110.4474° E]"
+    document.getElementById("currentPos").innerText = "[-7.5816° S, 110.4474° E]"
+}
+map_start()
