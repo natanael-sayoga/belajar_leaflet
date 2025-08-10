@@ -1,11 +1,11 @@
-{
+export const points = {
     "type": "FeatureCollection",
     "features": [
         {
             "type": "Feature",
             "properties": {
                 "landmarkType": "Recreation Site",
-                "name": ""
+                "name": "Bukit Klangon"
             },
             "geometry": {
                 "coordinates": [
@@ -19,7 +19,7 @@
             "type": "Feature",
             "properties": {
                 "landmarkType": "Recreation Site",
-                "name": ""
+                "name": "Bukit Pronojiwo"
             },
             "geometry": {
                 "coordinates": [
@@ -33,7 +33,7 @@
             "type": "Feature",
             "properties": {
                 "landmarkType": "Recreation Site",
-                "name": ""
+                "name": "Camp Yoyok"
             },
             "geometry": {
                 "coordinates": [
@@ -47,7 +47,7 @@
             "type": "Feature",
             "properties": {
                 "landmarkType": "Recreation Site",
-                "name": ""
+                "name": "Bumi Perkemahan Kedungsriti"
             },
             "geometry": {
                 "coordinates": [

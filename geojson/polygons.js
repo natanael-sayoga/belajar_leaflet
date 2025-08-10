@@ -1,4 +1,4 @@
-{
+export const polygons = {
     "type": "FeatureCollection",
     "features": [
         {

@@ -1,5 +1,8 @@
 import { myMarker } from './myMarkers.js';
 import { myTileLayers } from './myTileLayer.js';
+import { points } from './geojson/points.js'
+import { lines } from './geojson/lines.js'
+import { polygons } from './geojson/polygons.js'
 /*
 first we need to initiate a map object that will take LATITUDE and LONGITUDE coordinate as a starting point on our map
 this map object will also take initial ZOOM value and an id of a div that act as a container for our map!
@@ -66,12 +69,65 @@ function createMarkers(map, controlLayer){
     });
 }
 
+/* --- LOADING GEOJSON DATAS --- */
+function load_recreation_spots(controlLayer){
+    let recreationSpots = []
+    let spot = null
+    L.geoJSON(points, {
+        onEachFeature:function(feature, layer){
+            spot = layer.bindTooltip(feature["properties"]["name"])
+                    .setIcon(L.icon({
+                        iconUrl: "img/recreation_spot.png",
+                        iconSize: [20, 20]
+                    }))
+            recreationSpots.push(spot)
+        }
+    })
+    controlLayer.addOverlay(L.layerGroup(recreationSpots), "Recreation Spots")
+}
+function load_rivers(controlLayer){
+    let rivers = []
+    let river = null
+    L.geoJSON(lines, {
+        onEachFeature: function(feature, layer){
+            river = layer.bindTooltip(feature["properties"]["name"])
+            rivers.push(river)
+        },
+        style: {
+            weight: 6,
+            color: "#1E90FF"
+        }
+    })
+    controlLayer.addOverlay(L.layerGroup(rivers), "Rivers")
+}
+function load_hills(controlLayer){
+    let hills = []
+    let hill = null
+    L.geoJSON(polygons, {
+        onEachFeature: function(feature, layer){
+            hill = layer.bindTooltip(feature["properties"]["name"])
+            hills.push(hill)
+        },
+        style: {
+            color: "#778899",
+            fillColor: "#B0C4DE",
+            fillOpacity: 0.6
+        }
+    })
+    controlLayer.addOverlay(L.layerGroup(hills), "Hills")
+}
+
 /* --- ADDING ELEMENTS TO MAP AS THE DEFAULT OPTION --- */
 function map_start(){
     /* --- ADDING CONTROL LAYER --- */
     let myControlLayer = L.control.layers({}, {}) //L.control.layers(tile_options, marker_options)
     createMarkers(myMap, myControlLayer)
     createTilelayer(myMap, myControlLayer)
+
+    load_recreation_spots(myControlLayer)
+    load_rivers(myControlLayer)
+    load_hills(myControlLayer)
+
     myControlLayer.addTo(myMap)
 
     /* --- INITIATING LEGENDS OR OTHER INFO */
